@@ -1,22 +1,22 @@
-# Glioma_GAN
+# Glioma GAN
 
-Scripts and model accompanying our paper "Improving automated glioma segmentation in routine clinical use through AI-based replacement of missing sequences with synthetic MR images".
+Scripts and model accompanying our paper ["Improving Automated Glioma Segmentation in Routine Clinical Use Through Artificial Intelligence-Based Replacement of Missing Sequences With Synthetic Magnetic Resonance Imaging Scans"](https://pubmed.ncbi.nlm.nih.gov/34652289/) (Invest Radiol. 2022 Mar 1;57(3):187-193.).
 
 **generator.h5**: The fully trained model also used for evaluation in our manuscript.
 
-**mmgan_brats.py**: The code used for defining and training the model from TCIA data.
+**create_syn_image.py**: This script will create missing MR sequences (T1, T1ce, T2 or FLAIR) from available input modalities. This script accepts as input parameters the file paths to all four "BraTS" sequences:
+> -t2 /path/to/t2.nii.gz
 
-**example_niftis.zip**: A single example of a glioma patient with all for modalities present and correctly preprocessed (i.e. registered and resampled to SRI space and skullstripped).
+> -t1 /path/to/t1.nii.gz
 
-**create_syn_image.py**: This script will create a missing MR sequence (T1, T1ce, T2 or FLAIR) from the three other modalities. This script accepts as input parameters the file paths to the three input modalities like:
-> --t2=/path/to/t2.nii.gz
+> -t1c /path/to/t1c.nii.gz
 
-> --t1=/path/to/t1.nii.gz
+> -flair /path/to/flair.nii.gz
 
-> --t1c=/path/to/t1c.nii.gz
+All missing modalities are synthesized and stored in the path given above. Please ensure that all input images are correctly preprocessed (like in the example; you can use [BraTS.Toolkit](https://github.com/neuronflow/BraTS-Toolkit) for that). The file "generator.h5" must be in the same directory as the script. To for example create a synthetic flair from the example (assuming the files are stored in data/) call:
 
-> --flair=/path/to/flair.nii.gz
+*python3 create_syn_image.py -t1 data/example_t1.nii.gz -t1c data/example_t1c.nii.gz -t2 data/example_t2.nii.gz -flair data/example_flair_synth.nii.gz*
 
-The fourth (missing) sequence is synthesized. Please ensure that all input images are correctly preprocessed (like in the example; you can use [BraTS Toolkit](https://github.com/neuronflow/BraTS-Toolkit) for that) and omit spaces in the file paths. The file "generator.h5" must be in the same directory as the script. To for example create a synthetic flair from the example (assuming the files are stored in /home/you/) call:
+**/data/**: Four example NIfTIs, already fully preprocessed with [BraTS.Toolkit](https://pubmed.ncbi.nlm.nih.gov/32410929/).
 
-*python3 create_syn_image.py --t2=/home/you/example_t2.nii.gz --t1c=/home/you/example_t1c.nii.gz --t1=/home/you/example_t1.nii.gz*
+**/training/mmgan_brats.py**: Code used for training the GAN.
